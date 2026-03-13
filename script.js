@@ -136,14 +136,22 @@ function renderCard() {
     });
 }
 
+
 /******** HIGH-RES PNG EXPORT ********/
 async function downloadPNG() {
     const card = document.getElementById("cardPreview");
+    
+    // Temporarily revert mobile scaling for a perfect, full-size capture
+    card.style.transform = "scale(1)"; 
+
     const canvas = await html2canvas(card, { 
         scale: getData().scale, 
         useCORS: true, 
         backgroundColor: null 
     });
+
+    // Restore mobile scaling
+    card.style.transform = ""; 
 
     const link = document.createElement("a");
     link.download = `${getData().name.replace(/\s+/g, '_')}_Card.png`;
@@ -156,12 +164,17 @@ async function downloadPDF() {
     const card = document.getElementById("cardPreview");
     const d = getData();
 
-    const canvas = await html2canvas(card, { scale: d.scale, useCORS: true });
-    const imgData = canvas.toDataURL("image/png");
+    // Temporarily revert mobile scaling for perfect, full-size capture
+    card.style.transform = "scale(1)";
 
+    const canvas = await html2canvas(card, { scale: d.scale, useCORS: true });
+    
+    // Restore mobile scaling
+    card.style.transform = "";
+
+    const imgData = canvas.toDataURL("image/png");
     const { jsPDF } = window.jspdf;
     
-    // Determine dimensions based on selected format
     let cardWmm, cardHmm, pdfOrientation;
     if (d.format === 'horizontal') {
         cardWmm = 90; cardHmm = 50; pdfOrientation = "l";
@@ -172,8 +185,6 @@ async function downloadPDF() {
     }
 
     const pdf = new jsPDF(pdfOrientation, "mm", "a4"); 
-
-    // Center card on A4 page
     const pageW = pdf.internal.pageSize.getWidth();
     const pageH = pdf.internal.pageSize.getHeight();
     const x = (pageW - cardWmm) / 2;
@@ -182,6 +193,7 @@ async function downloadPDF() {
     pdf.addImage(imgData, "PNG", x, y, cardWmm, cardHmm, undefined, 'FAST');
     pdf.save(`${d.name.replace(/\s+/g, '_')}_PrintHQ.pdf`);
 }
+
 
 /******** INIT ********/
 window.onload = () => {

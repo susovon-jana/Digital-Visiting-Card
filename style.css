@@ -18,7 +18,7 @@ body { margin: 0; background: #eef2f6; padding-top: 80px; }
 
 /* PAGE STRUCTURE */
 .page-wrapper { padding: 20px; }
-.container { max-width: 1200px; margin: auto; display: grid; grid-template-columns: 1fr 1.3fr; gap: 25px; }
+.container { max-width: 1200px; margin: auto; display: grid; grid-template-columns: 1fr 1.3fr; gap: 25px; align-items: start; }
 @media (max-width: 900px) { .container { grid-template-columns: 1fr; } }
 
 /* PANELS */
@@ -33,73 +33,103 @@ input:focus, textarea:focus, select:focus { outline: none; border-color: #0d47a1
 input[type="color"] { width: 100%; height: 40px; border: none; border-radius: 6px; cursor: pointer; padding: 0; margin-bottom: 10px;}
 input[type="range"] { width: 100%; margin: 15px 0; cursor: pointer;}
 input[type="file"] { margin-bottom: 10px; padding: 5px; }
-
 .row-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+
+/* CUSTOM RADIO BUTTONS FOR FORMAT */
+.radio-group { display: flex; gap: 10px; margin-top: 5px; margin-bottom: 15px; }
+.radio-group input { display: none; }
+.radio-group label {
+    flex: 1; padding: 12px 5px; border: 2px solid #ddd; text-align: center; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; transition: 0.2s; margin-top: 0; background: #fafafa;
+}
+.radio-group label i { font-size: 18px; display: block; margin-bottom: 5px; color: #666; transition: 0.2s;}
+.radio-group label small { font-size: 11px; font-weight: normal; color: #888; }
+.radio-group input:checked + label { border-color: #0d47a1; background: #f0f5ff; color: #0d47a1; }
+.radio-group input:checked + label i { color: #0d47a1; }
 
 /* BUTTON ROW */
 .button-row { display: flex; gap: 10px; margin-top: 15px; }
 .button-row button { flex: 1; padding: 12px; border-radius: 6px; border: none; background: #0d47a1; color: white; cursor: pointer; font-weight: 600; transition: 0.2s; }
 .button-row button:hover { background: #002171; }
-.button-row #resetBtn { background: #e0e0e0; color: #333; }
+.button-row #resetBtn { background: #e0e0e0; color: #333; flex: 0.5; }
 .button-row #resetBtn:hover { background: #bdbdbd; }
 
-/* PREVIEW CARD (Standard 90x50 aspect ratio mapped to pixels) */
-.preview-holder { display: flex; justify-content: center; overflow: hidden; padding: 10px; }
+/* PREVIEW HOLDER */
+.preview-holder { display: flex; justify-content: center; align-items: center; overflow: hidden; padding: 10px; min-height: 270px; background: #f9f9f9; border-radius: 8px; border: 1px dashed #ccc;}
+
+/* BASE CARD STYLES */
 .card-preview {
-    width: 450px;
-    height: 250px;
     border-radius: 8px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.15);
     overflow: hidden;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 25px;
     position: relative;
     box-sizing: border-box;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    transition: background 0.3s, color 0.3s;
+    transition: background 0.3s, color 0.3s, width 0.3s, height 0.3s;
+}
+
+/* PROFESSIONAL CORNER ACCENTS */
+.corner-tl, .corner-br {
+    position: absolute;
+    z-index: 1;
+    opacity: 0.85;
+    mix-blend-mode: multiply;
+}
+.corner-tl {
+    top: 0; left: 0;
+    width: 140px; height: 140px;
+    clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+.corner-br {
+    bottom: 0; right: 0;
+    width: 140px; height: 140px;
+    clip-path: polygon(100% 100%, 0 100%, 100% 0);
 }
 
 /* CARD INNER STRUCTURE */
-.card-left { flex: 1; text-align: left; padding-right: 15px; z-index: 2; position: relative;}
+.card-left { flex: 1; z-index: 2; position: relative; }
 .card-right { 
-    width: 110px; 
-    height: 110px; 
     background: white; 
     padding: 6px; 
     border-radius: 8px; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
+    display: flex; align-items: center; justify-content: center; 
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    z-index: 2;
-    position: relative;
+    z-index: 2; position: relative;
 }
-
-/* CRITICAL: Force canvas to scale down visually but keep high internal resolution */
-.card-right canvas {
-    width: 100% !important;
-    height: 100% !important;
-}
+.card-right canvas { width: 100% !important; height: 100% !important; }
 
 /* TYPOGRAPHY IN CARD */
-.card-company { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; opacity: 0.8;}
+.card-company { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; opacity: 0.8;}
 .card-name { font-size: 24px; font-weight: 700; line-height: 1.1; }
 .card-title { font-size: 13px; font-weight: 500; margin-top: 4px; opacity: 0.85;}
-
 .card-divider { width: 40px; height: 3px; background: currentColor; margin: 15px 0; border-radius: 2px;}
-
 .card-details { font-size: 11px; line-height: 1.6; font-weight: 500;}
 .card-details i { width: 16px; text-align: center; margin-right: 6px; opacity: 0.8;}
+
+/* FORMAT: HORIZONTAL */
+.card-horizontal { width: 450px; height: 250px; flex-direction: row; align-items: center; justify-content: space-between; padding: 25px; }
+.card-horizontal .card-left { text-align: left; padding-right: 15px; }
+.card-horizontal .card-right { width: 110px; height: 110px; }
+
+/* FORMAT: VERTICAL */
+.card-vertical { width: 250px; height: 450px; flex-direction: column; align-items: center; justify-content: center; padding: 30px 20px; text-align: center; }
+.card-vertical .card-left { text-align: center; padding-right: 0; margin-bottom: 20px; }
+.card-vertical .card-divider { margin: 15px auto; }
+.card-vertical .card-right { width: 130px; height: 130px; }
+.card-vertical .corner-tl { width: 100px; height: 100px; }
+.card-vertical .corner-br { width: 100px; height: 100px; }
+
+/* FORMAT: SQUARE */
+.card-square { width: 320px; height: 320px; flex-direction: column; align-items: center; justify-content: space-between; padding: 25px; text-align: center; }
+.card-square .card-left { text-align: center; padding-right: 0; }
+.card-square .card-divider { margin: 10px auto; }
+.card-square .card-right { width: 100px; height: 100px; }
+.card-square .card-company { margin-bottom: 5px; }
 
 /* PRESET TEXTURES */
 .bg-kraft { background-image: url('https://www.transparenttextures.com/patterns/cardboard-flat.png'), linear-gradient(#e0c49c, #e0c49c) !important; }
 .bg-linen { background-image: url('https://www.transparenttextures.com/patterns/linen.png'), linear-gradient(#f3efe4, #f3efe4) !important; }
 .bg-carbon { background-image: repeating-linear-gradient(45deg,#333 0,#333 2px,#222 2px,#222 4px) !important; }
 .bg-mesh { background-image: radial-gradient(circle, #333 1px, transparent 1px), linear-gradient(#111, #111) !important; background-size: 10px 10px !important;}
-
-
-

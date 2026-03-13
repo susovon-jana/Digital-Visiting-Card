@@ -26,6 +26,10 @@ function getData() {
         const el = document.getElementById(id);
         return el ? (el.value.trim() || el.placeholder || "") : "";
     };
+    
+    // Get radio button value
+    const format = document.querySelector('input[name="cardFormat"]:checked').value;
+
     return {
         company: get("company"),
         name: get("name"),
@@ -40,6 +44,8 @@ function getData() {
         bgImageFit: document.getElementById("bgImageFit").value,
         bgOverlay: document.getElementById("bgOverlay").value,
         textColor: document.getElementById("textColor").value,
+        accentColor: document.getElementById("accentColor").value,
+        format: format,
         scale: parseInt(document.getElementById("exportScale").value, 10)
     };
 }
@@ -52,10 +58,10 @@ function renderCard() {
     const d = getData();
     const card = document.getElementById("cardPreview");
 
-    // Clear old classes & inline styles
-    card.className = "card-preview";
+    // Clear old classes & inline styles, apply format class
+    card.className = `card-preview card-${d.format}`;
     card.style.backgroundImage = "";
-    card.style.backgroundSize = "cover"; // Default
+    card.style.backgroundSize = "cover"; 
     card.style.backgroundPosition = "center";
     
     // Apply Background & Overlay
@@ -69,7 +75,6 @@ function renderCard() {
         }
     } else if (d.bgType === 'image' && uploadedBackgroundImage) {
         card.style.backgroundImage = `linear-gradient(${overlay}, ${overlay}), url(${uploadedBackgroundImage})`;
-        // Apply the auto-adjust strategy the user selected
         card.style.backgroundSize = d.bgImageFit;
     }
 
@@ -77,7 +82,21 @@ function renderCard() {
     card.style.color = d.textColor;
     card.innerHTML = "";
 
-    /* Left Side */
+    // Add Corner Accents (Professional Design)
+    if (d.accentColor !== 'transparent') {
+        const cornerTL = document.createElement("div");
+        cornerTL.className = "corner-tl";
+        cornerTL.style.backgroundColor = d.accentColor;
+        
+        const cornerBR = document.createElement("div");
+        cornerBR.className = "corner-br";
+        cornerBR.style.backgroundColor = d.accentColor;
+        
+        card.appendChild(cornerTL);
+        card.appendChild(cornerBR);
+    }
+
+    /* Left Side Content */
     const leftSide = document.createElement("div");
     leftSide.className = "card-left";
     leftSide.innerHTML = `
@@ -93,7 +112,7 @@ function renderCard() {
         </div>
     `;
 
-    /* Right Side */
+    /* Right Side Content (QR) */
     const rightSide = document.createElement("div");
     rightSide.className = "card-right";
     const qrCanvas = document.createElement("canvas");
@@ -102,7 +121,7 @@ function renderCard() {
     card.appendChild(leftSide);
     card.appendChild(rightSide);
 
-    /* Generate HIGH-RES QR Code (500px internal size) */
+    /* Generate HIGH-RES QR Code */
     requestAnimationFrame(() => {
         QRCode.toCanvas(
             qrCanvas,
@@ -120,16 +139,14 @@ function renderCard() {
 /******** HIGH-RES PNG EXPORT ********/
 async function downloadPNG() {
     const card = document.getElementById("cardPreview");
-    const scaleFactor = getData().scale; 
-
     const canvas = await html2canvas(card, { 
-        scale: scaleFactor, 
+        scale: getData().scale, 
         useCORS: true, 
         backgroundColor: null 
     });
 
     const link = document.createElement("a");
-    link.download = `${getData().name.replace(/\s+/g, '_')}_HQ.png`;
+    link.download = `${getData().name.replace(/\s+/g, '_')}_Card.png`;
     link.href = canvas.toDataURL("image/png");
     link.click();
 }
@@ -137,32 +154,41 @@ async function downloadPNG() {
 /******** HIGH-RES PDF EXPORT ********/
 async function downloadPDF() {
     const card = document.getElementById("cardPreview");
-    const scaleFactor = getData().scale; 
+    const d = getData();
 
-    const canvas = await html2canvas(card, { scale: scaleFactor, useCORS: true });
+    const canvas = await html2canvas(card, { scale: d.scale, useCORS: true });
     const imgData = canvas.toDataURL("image/png");
 
     const { jsPDF } = window.jspdf;
-    const pdf = new jsPDF("l", "mm", "a4"); 
+    
+    // Determine dimensions based on selected format
+    let cardWmm, cardHmm, pdfOrientation;
+    if (d.format === 'horizontal') {
+        cardWmm = 90; cardHmm = 50; pdfOrientation = "l";
+    } else if (d.format === 'vertical') {
+        cardWmm = 50; cardHmm = 90; pdfOrientation = "p";
+    } else if (d.format === 'square') {
+        cardWmm = 65; cardHmm = 65; pdfOrientation = "p";
+    }
 
-    const cardWmm = 90;
-    const cardHmm = 50;
+    const pdf = new jsPDF(pdfOrientation, "mm", "a4"); 
 
+    // Center card on A4 page
     const pageW = pdf.internal.pageSize.getWidth();
     const pageH = pdf.internal.pageSize.getHeight();
     const x = (pageW - cardWmm) / 2;
     const y = (pageH - cardHmm) / 2;
 
     pdf.addImage(imgData, "PNG", x, y, cardWmm, cardHmm, undefined, 'FAST');
-    pdf.save(`${getData().name.replace(/\s+/g, '_')}_PrintHQ.pdf`);
+    pdf.save(`${d.name.replace(/\s+/g, '_')}_PrintHQ.pdf`);
 }
 
 /******** INIT ********/
 window.onload = () => {
-    document.querySelectorAll("#cardForm input, #cardForm textarea, #cardForm select").forEach(el => {
-        if (el.id !== 'bgImageUpload') {
-            el.addEventListener("input", renderCard);
-        }
+    // Listen for all input changes (excluding image upload which handles itself)
+    document.querySelectorAll("#cardForm input:not([type='file']), #cardForm textarea, #cardForm select, input[name='cardFormat']").forEach(el => {
+        el.addEventListener("input", renderCard);
+        el.addEventListener("change", renderCard);
     });
 
     document.getElementById("resetBtn").onclick = () => {

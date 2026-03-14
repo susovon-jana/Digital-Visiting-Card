@@ -50,15 +50,11 @@ body { padding-top: 80px; }
     border-radius: 12px; 
     box-shadow: 0 4px 20px rgba(0,0,0,0.08); 
     width: 100%; 
-    max-width: 100%; /* Prevents blowout */
+    max-width: 100%; 
     box-sizing: border-box; 
 }
 
-/* Acts as a hard wall to ensure the preview box NEVER stretches the page */
-.preview-section {
-    overflow: hidden; 
-}
-
+.preview-section { overflow: hidden; }
 .section-title { margin-top: 0; font-size: 20px; margin-bottom: 20px; color: #333;}
 .form-divider { border: 0; height: 1px; background: #ddd; margin: 25px 0 10px 0; }
 
@@ -112,8 +108,8 @@ input[type="file"] { margin-bottom: 10px; padding: 5px; width: 100%; box-sizing:
    BASE CARD STYLES
    ========================================= */
 .card-preview {
-    margin: auto; /* Centers the card on desktop */
-    flex-shrink: 0; /* Prevents the browser from squishing the card */
+    margin: auto; 
+    flex-shrink: 0; 
     border-radius: 8px;
     box-shadow: 0 8px 24px rgba(0,0,0,0.15);
     overflow: hidden;
@@ -140,6 +136,26 @@ input[type="file"] { margin-bottom: 10px; padding: 5px; width: 100%; box-sizing:
 .card-divider { width: 40px; height: 3px; background: currentColor; margin: 15px 0; border-radius: 2px;}
 .card-details { font-size: 11px; line-height: 1.6; font-weight: 500;}
 .card-details i { width: 16px; text-align: center; margin-right: 6px; opacity: 0.8;}
+
+/* =========================================
+   WATERMARK / LOGO STYLES (NEW)
+   ========================================= */
+.watermark-img {
+    position: absolute;
+    z-index: 1; /* Sits behind text, above background */
+    pointer-events: none; /* Prevents it from interfering with user clicks */
+    object-fit: cover; /* Ensures circles/squares don't squash the image */
+}
+/* Positions */
+.wm-center { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+.wm-top-left { top: 20px; left: 20px; }
+.wm-top-right { top: 20px; right: 20px; }
+.wm-bottom-left { bottom: 20px; left: 20px; }
+.wm-bottom-right { bottom: 20px; right: 20px; }
+/* Shapes */
+.wm-original { border-radius: 0; }
+.wm-circle { border-radius: 50%; }
+.wm-square { border-radius: 12px; }
 
 /* =========================================
    CARD FORMATS
@@ -182,11 +198,9 @@ input[type="file"] { margin-bottom: 10px; padding: 5px; width: 100%; box-sizing:
     .button-row button { width: 100%; padding: 15px;}
     
     .preview-holder {
-        justify-content: flex-start; /* CRITICAL: Stops the browser from pushing the card outside the left boundary */
+        justify-content: flex-start; 
         box-shadow: inset -15px 0 15px -15px rgba(0,0,0,0.15);
     }
 
-    .card-preview {
-        margin: 0; /* CRITICAL: Disables automatic centering on mobile so it snaps cleanly to the left edge */
-    }
+    .card-preview { margin: 0; }
 }

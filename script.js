@@ -1,4 +1,5 @@
 let uploadedBackgroundImage = null;
+let uploadedWatermarkImage = null; // NEW
 
 // Form Toggle Logic
 document.getElementById('bgType').addEventListener('change', function() {
@@ -8,7 +9,7 @@ document.getElementById('bgType').addEventListener('change', function() {
     renderCard();
 });
 
-// Handle Image Upload
+// Handle Background Image Upload
 document.getElementById('bgImageUpload').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
@@ -21,13 +22,30 @@ document.getElementById('bgImageUpload').addEventListener('change', function(e) 
     }
 });
 
+// NEW: Handle Watermark / Logo Upload
+document.getElementById('wmImageUpload').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            uploadedWatermarkImage = event.target.result;
+            document.getElementById('wmControls').style.display = 'block'; // Show advanced controls
+            renderCard();
+        };
+        reader.readAsDataURL(file);
+    } else {
+        uploadedWatermarkImage = null;
+        document.getElementById('wmControls').style.display = 'none'; // Hide controls
+        renderCard();
+    }
+});
+
 function getData() {
     const get = id => {
         const el = document.getElementById(id);
         return el ? (el.value.trim() || el.placeholder || "") : "";
     };
     
-    // Get radio button value
     const format = document.querySelector('input[name="cardFormat"]:checked').value;
 
     return {
@@ -46,7 +64,13 @@ function getData() {
         textColor: document.getElementById("textColor").value,
         accentColor: document.getElementById("accentColor").value,
         format: format,
-        scale: parseInt(document.getElementById("exportScale").value, 10)
+        scale: parseInt(document.getElementById("exportScale").value, 10),
+        
+        // NEW: Watermark details
+        wmPosition: document.getElementById("wmPosition").value,
+        wmShape: document.getElementById("wmShape").value,
+        wmSize: document.getElementById("wmSize").value,
+        wmOpacity: document.getElementById("wmOpacity").value
     };
 }
 
@@ -82,18 +106,34 @@ function renderCard() {
     card.style.color = d.textColor;
     card.innerHTML = "";
 
-    // Add Corner Accents (Professional Design) using CSS Border trick for html2canvas support
+    // Add Corner Accents
     if (d.accentColor !== 'transparent') {
         const cornerTL = document.createElement("div");
         cornerTL.className = "corner-tl";
-        cornerTL.style.borderTopColor = d.accentColor; // Changed for Border trick
+        cornerTL.style.borderTopColor = d.accentColor; 
         
         const cornerBR = document.createElement("div");
         cornerBR.className = "corner-br";
-        cornerBR.style.borderBottomColor = d.accentColor; // Changed for Border trick
+        cornerBR.style.borderBottomColor = d.accentColor; 
         
         card.appendChild(cornerTL);
         card.appendChild(cornerBR);
+    }
+
+    // NEW: Add Watermark / Logo Layer
+    if (uploadedWatermarkImage) {
+        const wm = document.createElement("img");
+        wm.src = uploadedWatermarkImage;
+        wm.className = `watermark-img wm-${d.wmPosition} wm-${d.wmShape}`;
+        wm.style.width = `${d.wmSize}px`;
+        
+        // If they pick a circle or square, force height = width so it cuts a perfect shape
+        if (d.wmShape === 'circle' || d.wmShape === 'square') {
+            wm.style.height = `${d.wmSize}px`;
+        }
+        
+        wm.style.opacity = d.wmOpacity;
+        card.appendChild(wm);
     }
 
     /* Left Side Content */
@@ -161,7 +201,6 @@ async function downloadPDF() {
 
     const { jsPDF } = window.jspdf;
     
-    // Determine dimensions based on selected format
     let cardWmm, cardHmm, pdfOrientation;
     if (d.format === 'horizontal') {
         cardWmm = 90; cardHmm = 50; pdfOrientation = "l";
@@ -173,7 +212,6 @@ async function downloadPDF() {
 
     const pdf = new jsPDF(pdfOrientation, "mm", "a4"); 
 
-    // Center card on A4 page
     const pageW = pdf.internal.pageSize.getWidth();
     const pageH = pdf.internal.pageSize.getHeight();
     const x = (pageW - cardWmm) / 2;
@@ -185,7 +223,7 @@ async function downloadPDF() {
 
 /******** INIT ********/
 window.onload = () => {
-    // Listen for ALL input changes on the entire page so colors update instantly
+    // Listen for ALL input changes on the entire page
     document.querySelectorAll("input:not([type='file']), textarea, select").forEach(el => {
         el.addEventListener("input", renderCard);
         el.addEventListener("change", renderCard);
@@ -194,7 +232,9 @@ window.onload = () => {
     document.getElementById("resetBtn").onclick = () => {
         document.getElementById("cardForm").reset();
         uploadedBackgroundImage = null;
+        uploadedWatermarkImage = null; // NEW
         document.getElementById("bgType").dispatchEvent(new Event('change'));
+        document.getElementById("wmControls").style.display = 'none'; // NEW
         renderCard();
     };
     

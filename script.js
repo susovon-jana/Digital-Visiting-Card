@@ -82,15 +82,15 @@ function renderCard() {
     card.style.color = d.textColor;
     card.innerHTML = "";
 
-    // Add Corner Accents (Professional Design)
+    // Add Corner Accents (Professional Design) using CSS Border trick for html2canvas support
     if (d.accentColor !== 'transparent') {
         const cornerTL = document.createElement("div");
         cornerTL.className = "corner-tl";
-        cornerTL.style.backgroundColor = d.accentColor;
+        cornerTL.style.borderTopColor = d.accentColor; // Changed for Border trick
         
         const cornerBR = document.createElement("div");
         cornerBR.className = "corner-br";
-        cornerBR.style.backgroundColor = d.accentColor;
+        cornerBR.style.borderBottomColor = d.accentColor; // Changed for Border trick
         
         card.appendChild(cornerTL);
         card.appendChild(cornerBR);
@@ -185,8 +185,8 @@ async function downloadPDF() {
 
 /******** INIT ********/
 window.onload = () => {
-    // Listen for all input changes (excluding image upload which handles itself)
-    document.querySelectorAll("#cardForm input:not([type='file']), #cardForm textarea, #cardForm select, input[name='cardFormat']").forEach(el => {
+    // Listen for ALL input changes on the entire page so colors update instantly
+    document.querySelectorAll("input:not([type='file']), textarea, select").forEach(el => {
         el.addEventListener("input", renderCard);
         el.addEventListener("change", renderCard);
     });

@@ -126,9 +126,9 @@ input[type="file"] { margin-bottom: 10px; padding: 5px; width: 100%; box-sizing:
     transition: background 0.3s, color 0.3s, width 0.3s, height 0.3s;
 }
 
-.corner-tl, .corner-br { position: absolute; z-index: 1; opacity: 0.85; mix-blend-mode: multiply; }
-.corner-tl { top: 0; left: 0; width: 140px; height: 140px; clip-path: polygon(0 0, 100% 0, 0 100%); }
-.corner-br { bottom: 0; right: 0; width: 140px; height: 140px; clip-path: polygon(100% 100%, 0 100%, 100% 0); }
+.corner-tl, .corner-br { position: absolute; z-index: 1; opacity: 0.85; mix-blend-mode: multiply; width: 0; height: 0; background: transparent; }
+.corner-tl { top: 0; left: 0; border-top: 140px solid transparent; border-right: 140px solid transparent; }
+.corner-br { bottom: 0; right: 0; border-bottom: 140px solid transparent; border-left: 140px solid transparent; }
 
 .card-left { flex: 1; z-index: 2; position: relative; }
 .card-right { background: white; padding: 6px; border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 2; position: relative; }
@@ -152,7 +152,8 @@ input[type="file"] { margin-bottom: 10px; padding: 5px; width: 100%; box-sizing:
 .card-vertical .card-left { text-align: center; padding-right: 0; margin-bottom: 20px; }
 .card-vertical .card-divider { margin: 15px auto; }
 .card-vertical .card-right { width: 130px; height: 130px; }
-.card-vertical .corner-tl, .card-vertical .corner-br { width: 100px; height: 100px; }
+.card-vertical .corner-tl { border-top-width: 100px; border-right-width: 100px; }
+.card-vertical .corner-br { border-bottom-width: 100px; border-left-width: 100px; }
 
 .card-square { width: 320px; height: 320px; flex-direction: column; align-items: center; justify-content: space-between; padding: 25px; text-align: center; }
 .card-square .card-left { text-align: center; padding-right: 0; }

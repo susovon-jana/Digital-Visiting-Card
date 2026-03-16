@@ -1,5 +1,5 @@
 let uploadedBackgroundImage = null;
-let uploadedWatermarkImage = null; // NEW
+let uploadedWatermarkImage = null; 
 
 // Form Toggle Logic
 document.getElementById('bgType').addEventListener('change', function() {
@@ -22,20 +22,20 @@ document.getElementById('bgImageUpload').addEventListener('change', function(e) 
     }
 });
 
-// NEW: Handle Watermark / Logo Upload
+// Handle Watermark / Logo Upload
 document.getElementById('wmImageUpload').addEventListener('change', function(e) {
     const file = e.target.files[0];
     if (file) {
         const reader = new FileReader();
         reader.onload = function(event) {
             uploadedWatermarkImage = event.target.result;
-            document.getElementById('wmControls').style.display = 'block'; // Show advanced controls
+            document.getElementById('wmControls').style.display = 'block'; 
             renderCard();
         };
         reader.readAsDataURL(file);
     } else {
         uploadedWatermarkImage = null;
-        document.getElementById('wmControls').style.display = 'none'; // Hide controls
+        document.getElementById('wmControls').style.display = 'none'; 
         renderCard();
     }
 });
@@ -66,11 +66,27 @@ function getData() {
         format: format,
         scale: parseInt(document.getElementById("exportScale").value, 10),
         
-        // NEW: Watermark details
+        // Watermark details
         wmPosition: document.getElementById("wmPosition").value,
         wmShape: document.getElementById("wmShape").value,
         wmSize: document.getElementById("wmSize").value,
-        wmOpacity: document.getElementById("wmOpacity").value
+        wmOpacity: document.getElementById("wmOpacity").value,
+
+        // Typography details
+        fontFamily: document.getElementById("fontFamily").value,
+        fontScale: document.getElementById("fontScale").value,
+        fontBold: document.getElementById("fontBold").checked,
+        fontItalic: document.getElementById("fontItalic").checked,
+
+        // Content Checkbox States
+        showCompany: document.getElementById("showCompany").checked,
+        showName: document.getElementById("showName").checked,
+        showTitle: document.getElementById("showTitle").checked,
+        showPhone: document.getElementById("showPhone").checked,
+        showEmail: document.getElementById("showEmail").checked,
+        showWebsite: document.getElementById("showWebsite").checked,
+        showAddress: document.getElementById("showAddress").checked,
+        showQR: document.getElementById("showQR").checked
     };
 }
 
@@ -82,8 +98,20 @@ function renderCard() {
     const d = getData();
     const card = document.getElementById("cardPreview");
 
-    // Clear old classes & inline styles, apply format class
+    // Apply Format, Fonts, Scaling, and Text Styles
     card.className = `card-preview card-${d.format}`;
+    card.style.fontFamily = d.fontFamily;
+    card.style.setProperty('--f-scale', d.fontScale); 
+    card.style.setProperty('--f-style', d.fontItalic ? 'italic' : 'normal');
+
+    if (d.fontBold) {
+        card.style.setProperty('--f-weight-bold', '900'); // Extra bold for headers
+        card.style.setProperty('--f-weight-med', '700');  // Bold for details
+    } else {
+        card.style.setProperty('--f-weight-bold', '700'); // Normal bold for headers
+        card.style.setProperty('--f-weight-med', '500');  // Medium for details
+    }
+    
     card.style.backgroundImage = "";
     card.style.backgroundSize = "cover"; 
     card.style.backgroundPosition = "center";
@@ -120,14 +148,13 @@ function renderCard() {
         card.appendChild(cornerBR);
     }
 
-    // NEW: Add Watermark / Logo Layer
+    // Add Watermark / Logo Layer
     if (uploadedWatermarkImage) {
         const wm = document.createElement("img");
         wm.src = uploadedWatermarkImage;
         wm.className = `watermark-img wm-${d.wmPosition} wm-${d.wmShape}`;
         wm.style.width = `${d.wmSize}px`;
         
-        // If they pick a circle or square, force height = width so it cuts a perfect shape
         if (d.wmShape === 'circle' || d.wmShape === 'square') {
             wm.style.height = `${d.wmSize}px`;
         }
@@ -136,44 +163,52 @@ function renderCard() {
         card.appendChild(wm);
     }
 
-    /* Left Side Content */
+    /* Left Side Content (Conditionally Rendered based on Checklist) */
     const leftSide = document.createElement("div");
     leftSide.className = "card-left";
-    leftSide.innerHTML = `
-        <div class="card-company">${d.company}</div>
-        <div class="card-name">${d.name}</div>
-        <div class="card-title">${d.title}</div>
-        <div class="card-divider"></div>
-        <div class="card-details">
-            <div><i class="fa-solid fa-phone"></i> ${d.phone}</div>
-            <div><i class="fa-solid fa-envelope"></i> ${d.email}</div>
-            <div><i class="fa-solid fa-globe"></i> ${d.website.replace(/^https?:\/\//, '')}</div>
-            <div><i class="fa-solid fa-location-dot"></i> ${d.address.replace(/\n/g, ", ")}</div>
-        </div>
-    `;
+    
+    let leftHtml = '';
+    if (d.showCompany) leftHtml += `<div class="card-company">${d.company}</div>`;
+    if (d.showName) leftHtml += `<div class="card-name">${d.name}</div>`;
+    if (d.showTitle) leftHtml += `<div class="card-title">${d.title}</div>`;
+    
+    // Only show divider if at least one header item and one contact item exist
+    if ((d.showCompany || d.showName || d.showTitle) && (d.showPhone || d.showEmail || d.showWebsite || d.showAddress)) {
+        leftHtml += `<div class="card-divider"></div>`;
+    }
 
-    /* Right Side Content (QR) */
-    const rightSide = document.createElement("div");
-    rightSide.className = "card-right";
-    const qrCanvas = document.createElement("canvas");
-    rightSide.appendChild(qrCanvas);
+    leftHtml += `<div class="card-details">`;
+    if (d.showPhone) leftHtml += `<div><i class="fa-solid fa-phone"></i> ${d.phone}</div>`;
+    if (d.showEmail) leftHtml += `<div><i class="fa-solid fa-envelope"></i> ${d.email}</div>`;
+    if (d.showWebsite) leftHtml += `<div><i class="fa-solid fa-globe"></i> ${d.website.replace(/^https?:\/\//, '')}</div>`;
+    if (d.showAddress) leftHtml += `<div><i class="fa-solid fa-location-dot"></i> ${d.address.replace(/\n/g, ", ")}</div>`;
+    leftHtml += `</div>`;
 
+    leftSide.innerHTML = leftHtml;
     card.appendChild(leftSide);
-    card.appendChild(rightSide);
 
-    /* Generate HIGH-RES QR Code */
-    requestAnimationFrame(() => {
-        QRCode.toCanvas(
-            qrCanvas,
-            generateVCard(d),
-            { 
-                width: 500,  
-                margin: 0,
-                color: { dark: "#000000", light: "#ffffff" }
-            },
-            (error) => { if (error) console.error(error); }
-        );
-    });
+    /* Right Side Content (QR - Conditionally Rendered) */
+    if (d.showQR) {
+        const rightSide = document.createElement("div");
+        rightSide.className = "card-right";
+        const qrCanvas = document.createElement("canvas");
+        rightSide.appendChild(qrCanvas);
+        card.appendChild(rightSide);
+
+        /* Generate HIGH-RES QR Code */
+        requestAnimationFrame(() => {
+            QRCode.toCanvas(
+                qrCanvas,
+                generateVCard(d),
+                { 
+                    width: 500,  
+                    margin: 0,
+                    color: { dark: "#000000", light: "#ffffff" }
+                },
+                (error) => { if (error) console.error(error); }
+            );
+        });
+    }
 }
 
 /******** HIGH-RES PNG EXPORT ********/
@@ -232,9 +267,9 @@ window.onload = () => {
     document.getElementById("resetBtn").onclick = () => {
         document.getElementById("cardForm").reset();
         uploadedBackgroundImage = null;
-        uploadedWatermarkImage = null; // NEW
+        uploadedWatermarkImage = null; 
         document.getElementById("bgType").dispatchEvent(new Event('change'));
-        document.getElementById("wmControls").style.display = 'none'; // NEW
+        document.getElementById("wmControls").style.display = 'none'; 
         renderCard();
     };
     

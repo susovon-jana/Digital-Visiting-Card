@@ -6,7 +6,7 @@
     <link rel="icon" type="image/png" href="file/logo.png">
     <title>Visiting Card Builder</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Birthstone&family=Birthstone+Bounce&family=Lato:ital,wght@0,400;0,700;1,400;1,700&family=Merriweather:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700&family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700&family=Oswald:wght@400;500;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700&family=Poppins:ital,wght@0,400;0,500;0,600;0,700&family=Roboto:ital,wght@0,400;0,500;0,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -29,7 +29,7 @@
             <h2 class="section-title">1. Enter Your Details</h2>
             
             <label>Company / Organization Name</label>
-            <input id="company" type="text" placeholder="Your University ">
+            <input id="company" type="text" placeholder="Your University">
 
             <label>Name</label>
             <input id="name" type="text" placeholder="Your Name">
@@ -76,14 +76,11 @@
 
             <div id="bgImageContainer" class="dynamic-input" style="display: none;">
                 <label>Upload Background Image</label>
-                <p style="font-size: 11px; color: #666; margin-top: 0; line-height: 1.4;">
-                    <em>Recommended size: <strong>1063 x 591 px</strong>. The builder will auto-adjust sizes that don't match.</em>
-                </p>
                 <input type="file" id="bgImageUpload" accept="image/png, image/jpeg, image/jpg">
                 
                 <label>Image Auto-Adjust Strategy</label>
                 <select id="bgImageFit">
-                    <option value="cover" selected>Fill Entire Card (Best - crops excess edges)</option>
+                    <option value="cover" selected>Fill Entire Card (Best)</option>
                     <option value="contain">Fit Inside (Leaves blank space)</option>
                     <option value="100% 100%">Stretch to Fit (May distort)</option>
                 </select>
@@ -93,17 +90,84 @@
         <section class="preview-section right-panel">
             <h2 class="section-title">Live Preview</h2>
             <div class="preview-holder">
-                <div id="cardPreview" class="card-preview card-horizontal">
-                    </div>
+                <div id="cardPreview" class="card-preview card-horizontal"></div>
+            </div>
+
+            <div class="content-toggle-section">
+                <label style="margin-top: 0; font-size: 13px; text-transform: uppercase; color: #666;">Toggle Card Content</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" id="showCompany" checked> Company</label>
+                    <label><input type="checkbox" id="showName" checked> Name</label>
+                    <label><input type="checkbox" id="showTitle" checked> Designation</label>
+                    <label><input type="checkbox" id="showPhone" checked> Phone</label>
+                    <label><input type="checkbox" id="showEmail" checked> Email</label>
+                    <label><input type="checkbox" id="showWebsite" checked> Website</label>
+                    <label><input type="checkbox" id="showAddress" checked> Address</label>
+                    <label><input type="checkbox" id="showQR" checked> QR Code</label>
+                </div>
             </div>
 
             <hr class="form-divider">
-            <h2 class="section-title" style="margin-top: 15px;">3. Logo / Watermark</h2>
+            <h2 class="section-title" style="margin-top: 15px;">3. Typography & Text Style</h2>
+
+            <div class="row-inputs" style="margin-bottom: 15px;">
+                <div>
+                    <label>Font Family</label>
+                    <select id="fontFamily">
+                        <optgroup label="Modern & Clean">
+                            <option value="'Poppins', sans-serif" selected>Poppins (Modern)</option>
+                            <option value="'Roboto', sans-serif">Roboto (Clean)</option>
+                            <option value="'Open Sans', sans-serif">Open Sans (Neutral)</option>
+                            <option value="'Lato', sans-serif">Lato (Friendly)</option>
+                            <option value="'Montserrat', sans-serif">Montserrat (Geometric)</option>
+                        </optgroup>
+                        
+                        <optgroup label="Elegant & Script">
+                            <option value="'Monotype Corsiva', cursive">Monotype Corsiva</option>
+                            <option value="'Palace Script MT', cursive">Palace Script MT</option>
+                            <option value="'Pristina', cursive">Pristina</option>
+                            <option value="'Script MT Bold', cursive">Script MT Bold</option>
+                            <option value="'Birthstone', cursive">Birthstone</option>
+                            <option value="'Birthstone Bounce', cursive">Birthstone Bounce</option>
+                            <option value="'Balqis', cursive">Balqis</option>
+                        </optgroup>
+                        
+                        <optgroup label="Decorative & Display">
+                            <option value="'Onyx', sans-serif">Onyx</option>
+                            <option value="'Old English Text MT', serif">Old English Text MT</option>
+                            <option value="'Showcard Gothic', sans-serif">Showcard Gothic</option>
+                            <option value="'Rockwell Nova', serif">Rockwell Nova</option>
+                            <option value="'Stencil', sans-serif">Stencil</option>
+                            <option value="'Snap ITC', sans-serif">Snap ITC</option>
+                        </optgroup>
+                        
+                        <optgroup label="Modern & Unique">
+                            <option value="'Segoe Script', cursive">Segoe Script</option>
+                            <option value="'MV Boli', cursive">MV Boli</option>
+                            <option value="'Papyrus', fantasy">Papyrus</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div>
+                    <label>Font Size Scale</label>
+                    <input type="range" id="fontScale" min="0.7" max="1.4" step="0.05" value="1">
+                </div>
+            </div>
+
+            <div class="row-inputs">
+                <div style="grid-column: span 2;">
+                    <label>Text Style Modifiers</label>
+                    <div class="checkbox-group" style="margin-top: 5px;">
+                        <label><input type="checkbox" id="fontBold"> Force Bold Text</label>
+                        <label><input type="checkbox" id="fontItalic"> Make Italic</label>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="form-divider">
+            <h2 class="section-title" style="margin-top: 15px;">4. Logo / Watermark</h2>
             
             <label>Upload Logo or Picture</label>
-            <p style="font-size: 11px; color: #666; margin-top: 0; line-height: 1.4;">
-                <em>For crisp quality and perfect blending, upload a <strong>Square Transparent PNG (e.g., 500x500 px)</strong>.</em>
-            </p>
             <input type="file" id="wmImageUpload" accept="image/png, image/jpeg, image/jpg">
 
             <div id="wmControls" style="display: none; background: #f9f9f9; padding: 15px; border-radius: 8px; border: 1px solid #eee; margin-top: 10px;">
@@ -141,7 +205,7 @@
             </div>
 
             <hr class="form-divider">
-            <h2 class="section-title" style="margin-top: 15px; font-size: 18px;">4. Layout & Export</h2>
+            <h2 class="section-title" style="margin-top: 15px; font-size: 18px;">5. Layout & Export</h2>
             
             <label>Card Format & Orientation</label>
             <div class="radio-group" id="formatGroup">

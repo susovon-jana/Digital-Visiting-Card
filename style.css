@@ -1,7 +1,13 @@
 /* =========================================
    BASE STYLES & RESET
    ========================================= */
-* { box-sizing: border-box; font-family: 'Poppins', Arial, sans-serif; }
+* { box-sizing: border-box; } /* Fixed bug: removed global font-family lock */
+
+/* Apply default font to body */
+body { font-family: 'Poppins', Arial, sans-serif; padding-top: 80px; }
+
+/* Force all elements inside the card to inherit the live font change, EXCEPT icons */
+.card-preview *:not(i) { font-family: inherit; }
 
 /* STRICT VIEWPORT LOCK: Absolutely prevents horizontal scrolling of the page itself */
 html, body { 
@@ -12,8 +18,6 @@ html, body {
     overflow-x: hidden; 
     background: #eef2f6; 
 }
-
-body { padding-top: 80px; }
 
 /* =========================================
    NAVBAR
@@ -68,6 +72,14 @@ input[type="file"] { margin-bottom: 10px; padding: 5px; width: 100%; box-sizing:
 .row-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
 
 /* =========================================
+   CONTENT CHECKLIST STYLES
+   ========================================= */
+.content-toggle-section { margin-top: 15px; padding: 15px; background: #f9f9f9; border-radius: 8px; border: 1px solid #eee; }
+.checkbox-group { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 10px; }
+.checkbox-group label { display: flex; align-items: center; gap: 5px; font-weight: 500; font-size: 13px; margin: 0; cursor: pointer; color: #444; }
+.checkbox-group input[type="checkbox"] { width: auto; margin: 0; cursor: pointer; transform: scale(1.1); }
+
+/* =========================================
    CUSTOM RADIO BUTTONS
    ========================================= */
 .radio-group { display: flex; gap: 10px; margin-top: 5px; margin-bottom: 15px; }
@@ -120,6 +132,7 @@ input[type="file"] { margin-bottom: 10px; padding: 5px; width: 100%; box-sizing:
     background-position: center;
     background-repeat: no-repeat;
     transition: background 0.3s, color 0.3s, width 0.3s, height 0.3s;
+    font-style: var(--f-style, normal); /* Allows italics */
 }
 
 .corner-tl, .corner-br { position: absolute; z-index: 1; opacity: 0.85; mix-blend-mode: multiply; width: 0; height: 0; background: transparent; }
@@ -130,15 +143,16 @@ input[type="file"] { margin-bottom: 10px; padding: 5px; width: 100%; box-sizing:
 .card-right { background: white; padding: 6px; border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 2; position: relative; }
 .card-right canvas { width: 100% !important; height: 100% !important; }
 
-.card-company { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; opacity: 0.8;}
-.card-name { font-size: 24px; font-weight: 700; line-height: 1.1; }
-.card-title { font-size: 13px; font-weight: 500; margin-top: 4px; opacity: 0.85;}
+/* Typography styles using CSS variables for live Bold & Scaling toggling */
+.card-company { font-size: calc(12px * var(--f-scale, 1)); font-weight: var(--f-weight-bold, 700); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; opacity: 0.8;}
+.card-name { font-size: calc(24px * var(--f-scale, 1)); font-weight: var(--f-weight-bold, 700); line-height: 1.1; }
+.card-title { font-size: calc(13px * var(--f-scale, 1)); font-weight: var(--f-weight-med, 500); margin-top: 4px; opacity: 0.85;}
 .card-divider { width: 40px; height: 3px; background: currentColor; margin: 15px 0; border-radius: 2px;}
-.card-details { font-size: 11px; line-height: 1.6; font-weight: 500;}
+.card-details { font-size: calc(11px * var(--f-scale, 1)); line-height: 1.6; font-weight: var(--f-weight-med, 500);}
 .card-details i { width: 16px; text-align: center; margin-right: 6px; opacity: 0.8;}
 
 /* =========================================
-   WATERMARK / LOGO STYLES (NEW)
+   WATERMARK / LOGO STYLES
    ========================================= */
 .watermark-img {
     position: absolute;

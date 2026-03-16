@@ -1,23 +1,25 @@
 /* =========================================
    BASE STYLES & RESET
    ========================================= */
-* { box-sizing: border-box; } /* Fixed bug: removed global font-family lock */
+* { box-sizing: border-box; } 
 
-/* Apply default font to body */
-body { font-family: 'Poppins', Arial, sans-serif; padding-top: 80px; }
-
-/* Force all elements inside the card to inherit the live font change, EXCEPT icons */
-.card-preview *:not(i) { font-family: inherit; }
-
-/* STRICT VIEWPORT LOCK: Absolutely prevents horizontal scrolling of the page itself */
 html, body { 
     margin: 0; 
-    padding: 0;
+    padding: 0; /* Reset default padding */
     width: 100%;
     max-width: 100vw; 
     overflow-x: hidden; 
     background: #eef2f6; 
 }
+
+/* Apply default font to body and add spacing for the fixed navbar */
+body { 
+    font-family: 'Poppins', Arial, sans-serif; 
+    padding-top: 85px; /* Fixed: Pushes content down below the navbar! */
+}
+
+/* Force all elements inside the card to inherit the live font change, EXCEPT icons */
+.card-preview *:not(i) { font-family: inherit; }
 
 /* =========================================
    NAVBAR

@@ -9,7 +9,7 @@
 
 **A fully client-side, zero-dependency visiting card designer with live preview, QR code generation, and high-resolution PNG / PDF export.**
 
-[▶ Live Demo](https://your-project.pages.dev) &nbsp;·&nbsp; [📖 Update Guide](./UPDATING.md) &nbsp;·&nbsp; [🏗 Architecture](./ARCHITECTURE.md)
+[▶ Live Demo](https://susovon-jana.github.io/Digital-Visiting-Card) &nbsp;·&nbsp; [👨‍💻 Developer Profile](https://dr-susovon.pages.dev) &nbsp;·&nbsp; [🏗 Architecture](./ARCHITECTURE.md)
 
 </div>
 

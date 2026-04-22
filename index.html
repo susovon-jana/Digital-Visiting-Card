@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/svg+xml" href="logo.svg">
+    <title>Visiting Card Builder</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Birthstone&family=Birthstone+Bounce&family=Lato:ital,wght@0,400;0,700;1,400;1,700&family=Merriweather:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700&family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700&family=Oswald:wght@400;500;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700&family=Poppins:ital,wght@0,400;0,500;0,600;0,700&family=Roboto:ital,wght@0,400;0,500;0,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="navbar">
+    <div class="nav-brand">
+        <h1 class="nav-title">Visiting Card Builder</h1>
+    </div>
+    <a href="https://dr-susovon.pages.dev/" target="_blank" class="profile-btn">
+        <strong>Susovon Jana, Ph.D.</strong><br>
+        <span>Visit Profile →</span>
+    </a>
+</header>
+
+<main class="page-wrapper">
+    <form id="cardForm" class="container">
+        
+        <section class="form-section">
+            <h2 class="section-title">1. Enter Your Details</h2>
+            
+            <label>Company / Organization Name</label>
+            <input id="company" type="text" placeholder="Your University">
+
+            <label>Name</label>
+            <input id="name" type="text" placeholder="Your Name">
+
+            <label>Designation</label>
+            <input id="title" type="text" placeholder="Your Designation">
+
+            <label>Phone</label>
+            <input id="phone" type="text" placeholder="+91 xxxxx xxxxx">
+
+            <label>Email</label>
+            <input id="email" type="email" placeholder="xxxxx@gmail.com">
+
+            <label>Website</label>
+            <input id="website" type="url" placeholder="https://dr.susovon.workers.dev">
+
+            <label>Address</label>
+            <textarea id="address" rows="2" placeholder="Address"></textarea>
+
+            <hr class="form-divider">
+            <h2 class="section-title" style="margin-top: 15px;">2. Background Design</h2>
+
+            <label>Background Type</label>
+            <select id="bgType">
+                <option value="color">Solid Color</option>
+                <option value="texture">Texture</option>
+                <option value="image">Custom Image</option>
+            </select>
+
+            <div id="bgColorContainer" class="dynamic-input">
+                <label>Card Color</label>
+                <input type="color" id="bgColor" value="#ffffff">
+            </div>
+
+            <div id="bgTextureContainer" class="dynamic-input" style="display: none;">
+                <label>Select Texture</label>
+                <select id="bgTexture">
+                    <option value="kraft">Kraft Paper</option>
+                    <option value="linen">Linen</option>
+                    <option value="carbon">Carbon Fiber</option>
+                    <option value="mesh">Dark Mesh</option>
+                </select>
+            </div>
+
+            <div id="bgImageContainer" class="dynamic-input" style="display: none;">
+                <label>Upload Background Image</label>
+                <input type="file" id="bgImageUpload" accept="image/png, image/jpeg, image/jpg">
+                
+                <label>Image Auto-Adjust Strategy</label>
+                <select id="bgImageFit">
+                    <option value="cover" selected>Fill Entire Card (Best)</option>
+                    <option value="contain">Fit Inside (Leaves blank space)</option>
+                    <option value="100% 100%">Stretch to Fit (May distort)</option>
+                </select>
+            </div>
+        </section>
+
+        <section class="preview-section right-panel">
+            <h2 class="section-title">Live Preview</h2>
+            <div class="preview-holder">
+                <div id="cardPreview" class="card-preview card-horizontal"></div>
+            </div>
+
+            <div class="content-toggle-section">
+                <label style="margin-top: 0; font-size: 13px; text-transform: uppercase; color: #666;">Toggle Card Content</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" id="showCompany" checked> Company</label>
+                    <label><input type="checkbox" id="showName" checked> Name</label>
+                    <label><input type="checkbox" id="showTitle" checked> Designation</label>
+                    <label><input type="checkbox" id="showPhone" checked> Phone</label>
+                    <label><input type="checkbox" id="showEmail" checked> Email</label>
+                    <label><input type="checkbox" id="showWebsite" checked> Website</label>
+                    <label><input type="checkbox" id="showAddress" checked> Address</label>
+                    <label><input type="checkbox" id="showQR" checked> QR Code</label>
+                </div>
+            </div>
+
+            <hr class="form-divider">
+            <h2 class="section-title" style="margin-top: 15px;">3. Typography & Text Style</h2>
+
+            <div class="row-inputs" style="margin-bottom: 15px;">
+                <div>
+                    <label>Font Family</label>
+                    <select id="fontFamily">
+                        <optgroup label="Modern & Clean">
+                            <option value="'Poppins', sans-serif" selected>Poppins (Modern)</option>
+                            <option value="'Roboto', sans-serif">Roboto (Clean)</option>
+                            <option value="'Open Sans', sans-serif">Open Sans (Neutral)</option>
+                            <option value="'Lato', sans-serif">Lato (Friendly)</option>
+                            <option value="'Montserrat', sans-serif">Montserrat (Geometric)</option>
+                        </optgroup>
+                        
+                        <optgroup label="Elegant & Script">
+                            <option value="'Monotype Corsiva', cursive">Monotype Corsiva</option>
+                            <option value="'Palace Script MT', cursive">Palace Script MT</option>
+                            <option value="'Pristina', cursive">Pristina</option>
+                            <option value="'Script MT Bold', cursive">Script MT Bold</option>
+                            <option value="'Birthstone', cursive">Birthstone</option>
+                            <option value="'Birthstone Bounce', cursive">Birthstone Bounce</option>
+                            <option value="'Balqis', cursive">Balqis</option>
+                        </optgroup>
+                        
+                        <optgroup label="Decorative & Display">
+                            <option value="'Onyx', sans-serif">Onyx</option>
+                            <option value="'Old English Text MT', serif">Old English Text MT</option>
+                            <option value="'Showcard Gothic', sans-serif">Showcard Gothic</option>
+                            <option value="'Rockwell Nova', serif">Rockwell Nova</option>
+                            <option value="'Stencil', sans-serif">Stencil</option>
+                            <option value="'Snap ITC', sans-serif">Snap ITC</option>
+                        </optgroup>
+                        
+                        <optgroup label="Modern & Unique">
+                            <option value="'Segoe Script', cursive">Segoe Script</option>
+                            <option value="'MV Boli', cursive">MV Boli</option>
+                            <option value="'Papyrus', fantasy">Papyrus</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div>
+                    <label>Font Size Scale</label>
+                    <input type="range" id="fontScale" min="0.7" max="1.4" step="0.05" value="1">
+                </div>
+            </div>
+
+            <div class="row-inputs">
+                <div style="grid-column: span 2;">
+                    <label>Text Style Modifiers</label>
+                    <div class="checkbox-group" style="margin-top: 5px;">
+                        <label><input type="checkbox" id="fontBold"> Force Bold Text</label>
+                        <label><input type="checkbox" id="fontItalic"> Make Italic</label>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="form-divider">
+            <h2 class="section-title" style="margin-top: 15px;">4. Logo / Watermark</h2>
+            
+            <label>Upload Logo or Picture</label>
+            <input type="file" id="wmImageUpload" accept="image/png, image/jpeg, image/jpg">
+
+            <div id="wmControls" style="display: none; background: #f9f9f9; padding: 15px; border-radius: 8px; border: 1px solid #eee; margin-top: 10px;">
+                <div class="row-inputs">
+                    <div>
+                        <label>Position</label>
+                        <select id="wmPosition">
+                            <option value="center" selected>Center Background</option>
+                            <option value="top-left">Top Left Corner</option>
+                            <option value="top-right">Top Right Corner</option>
+                            <option value="bottom-left">Bottom Left Corner</option>
+                            <option value="bottom-right">Bottom Right Corner</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>Shape Trim</label>
+                        <select id="wmShape">
+                            <option value="original" selected>Original</option>
+                            <option value="circle">Perfect Circle</option>
+                            <option value="square">Rounded Square</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="row-inputs">
+                    <div>
+                        <label>Size</label>
+                        <input type="range" id="wmSize" min="20" max="250" step="5" value="80">
+                    </div>
+                    <div>
+                        <label>Opacity (Visibility)</label>
+                        <input type="range" id="wmOpacity" min="0.05" max="1" step="0.05" value="0.2">
+                    </div>
+                </div>
+            </div>
+
+            <hr class="form-divider">
+            <h2 class="section-title" style="margin-top: 15px; font-size: 18px;">5. Layout & Export</h2>
+            
+            <label>Card Format & Orientation</label>
+            <div class="radio-group" id="formatGroup">
+                <input type="radio" id="fmtHorz" name="cardFormat" value="horizontal" checked>
+                <label for="fmtHorz"><i class="fa-regular fa-rectangle-list"></i> Horizontal<br><small>(90x50mm)</small></label>
+                
+                <input type="radio" id="fmtVert" name="cardFormat" value="vertical">
+                <label for="fmtVert"><i class="fa-solid fa-mobile-screen"></i> Vertical<br><small>(50x90mm)</small></label>
+                
+                <input type="radio" id="fmtSquare" name="cardFormat" value="square">
+                <label for="fmtSquare"><i class="fa-regular fa-square"></i> Square<br><small>(65x65mm)</small></label>
+            </div>
+
+            <div class="row-inputs">
+                <div>
+                    <label>Corner Accent Color</label>
+                    <input type="color" id="accentColor" value="#0d47a1">
+                </div>
+                <div>
+                    <label>Text Color</label>
+                    <input type="color" id="textColor" value="#222222">
+                </div>
+            </div>
+            
+            <div class="row-inputs">
+                <div style="grid-column: span 2;">
+                    <label>Image Darkening Overlay (For readability)</label>
+                    <input type="range" id="bgOverlay" min="0" max="0.9" step="0.1" value="0">
+                </div>
+            </div>
+
+            <label>Export Resolution</label>
+            <select id="exportScale">
+                <option value="2">Standard (Good for Web)</option>
+                <option value="4" selected>High (Sharp HQ)</option>
+                <option value="8">Ultra (Print Quality 8x)</option>
+            </select>
+
+            <div class="button-row">
+                <button type="button" id="resetBtn">Reset All</button>
+                <button type="button" id="pngBtn"><i class="fa-solid fa-image"></i> Download PNG</button>
+                <button type="button" id="pdfBtn"><i class="fa-solid fa-file-pdf"></i> Download PDF</button>
+            </div>
+
+        </section>
+    </form>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
